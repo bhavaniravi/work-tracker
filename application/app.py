@@ -16,9 +16,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
-db.create_all()
-db.init_app(app)
-
 from application.views import *
 
 # Run the app in port 5000 and in debug mode

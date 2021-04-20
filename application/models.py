@@ -17,3 +17,6 @@ class SubTask(db.Model):
     description = db.Column(db.String(120))
     work_item_id = db.Column(db.Integer, db.ForeignKey('work_item.id'), nullable=False)
 
+
+db.create_all()
+db.init_app(app)
