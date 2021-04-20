@@ -1,10 +1,7 @@
-from app import app
-from flask_sqlalchemy import SQLAlchemy
+from application.app import app, db
+
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
-
-
-db = SQLAlchemy(app)
 
 
 class WorkItem(db.Model):
@@ -19,3 +16,4 @@ class SubTask(db.Model):
     title = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(120))
     work_item_id = db.Column(db.Integer, db.ForeignKey('work_item.id'), nullable=False)
+
