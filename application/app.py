@@ -18,6 +18,9 @@ db = SQLAlchemy(app)
 
 from application.views import *
 
+
+
+
 # Run the app in port 5000 and in debug mode
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
