@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 from application.views import *
-
+from flask_jwt import JWT, jwt_required, current_identity
 
 
 

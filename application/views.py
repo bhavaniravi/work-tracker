@@ -1,17 +1,52 @@
 
 from application.app import app
-from application.models import WorkItem, db, SubTask
+from application.models import WorkItem, db, SubTask, User
 from flask import request
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
 
 @app.route("/")
 def home():
     return {"Status": "Success"}, 200 
 
+@app.route("/signup", methods=["POST"])
+def signup():
+    params = request.authorization
+    try:
+        user = User(**params)
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError:
+        return {"Status": "Error", "result": "User already exists"}, 400
+    return {"Status": "Success", "result": "User created"}
+
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    params = request.authorization
+    if authenticate(params):
+        return {"Status": "Success", "result": "User logged in"}
+
+def authenticate(params):
+    # checks with the DB
+    # returns if it's a valid user
+    try:
+        user = User.query.filter_by(username=params["username"]).first()
+        return user and user.password == params["password"]
+    except (KeyError, TypeError):
+        return False
+
 @app.route("/work")
 def list_work_items():
-    result = WorkItem.query.filter_by().all()
-    response = [{"id": res.id, "title":res.title} for res in result]
-    return {"Status": "Success", "result": response}
+    auth_info = request.authorization or {}
+    if not authenticate(auth_info):
+        return {"Status": "Error", "result": "User not autheniticated"}
+
+    if authenticate(auth_info):
+        result = WorkItem.query.filter_by().all()
+        response = [{"id": res.id, "title":res.title} for res in result]
+        return {"Status": "Success", "result": response}
 
 
 @app.route("/work", methods=["POST"])
@@ -66,6 +101,3 @@ def add_sub_task(item_id):
     db.session.commit()
     
     return {"Status": "Success", "result": params}, 201
-
-
-
